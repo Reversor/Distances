@@ -1,9 +1,6 @@
 package io.github.reversor.distance.vincenty;
 
 abstract class BaseVincenty {
-    //Accuracy constants
-    private static final int ITERATION_LIMIT = 100;
-    private static final double EPSILON = 1e-20;
     //WGS84 constants
     private static final double RADIUS_EQUATOR = 6378137.D;
     private static final double RADIUS_POLES = 6356752.314245179D;
@@ -28,7 +25,7 @@ abstract class BaseVincenty {
             sinU2 = tan * cosU2;
         }
 
-        double iterationLimit = ITERATION_LIMIT;
+        double iterationLimit = 100;
 
         double lambda = l;
         double lambda2;
@@ -64,7 +61,7 @@ abstract class BaseVincenty {
                     * (sigma + C * sinSigma * (cos2SigmaM + C * cosSigma * (-1
                     + 2 * cos2SigmaM * cos2SigmaM)));
             lambda = l + v;
-        } while (Math.abs(lambda - lambda2) > EPSILON && --iterationLimit > 0);
+        } while (Math.abs(lambda - lambda2) > 1e-12 && --iterationLimit > 0);
 
         if (iterationLimit == 0) {
             return Double.NaN;
