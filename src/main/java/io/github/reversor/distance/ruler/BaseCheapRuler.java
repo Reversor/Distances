@@ -1,19 +1,49 @@
 package io.github.reversor.distance.ruler;
 
-public abstract class BaseCheapRuler {
-    protected double lat;
-    double kx;
-    double ky;
+import io.github.reversor.distance.BaseDistanceCalculator;
 
-    protected void initCoefficients(double lat1) {
-        this.lat = lat1;
-        double cos = Math.cos(lat1 * Math.PI / 180.0);
-        double cos2 = 2.D * cos * cos - 1;
-        double cos3 = 2.D * cos * cos2 - cos;
-        double cos4 = 2.D * cos * cos3 - cos2;
-        double cos5 = 2.D * cos * cos4 - cos3;
+public abstract class BaseCheapRuler extends BaseDistanceCalculator {
+    protected double kx;
+    protected double ky;
 
-        kx = 111415.13D * cos - 94.55D * cos3 + 0.12D * cos5;
-        ky = 111132.09D - 566.05D * cos2 + 1.2D * cos4;
+    public BaseCheapRuler(double lat, double lon) {
+        super(lat, lon);
+        initCoefficients(lat);
+    }
+
+    public BaseCheapRuler() {
+        super();
+    }
+
+    protected abstract void initCoefficients(double lat1);
+
+    private double normalize(double v) {
+        if (v > 180) {
+            v -= 360;
+        } else if (v < -180) {
+            v += 360;
+        }
+        return v;
+    }
+
+    @Override
+    final public double calc(double lat1, double lon1, double lat2, double lon2) {
+        if (this.lat != lat1) {
+            this.lat = lat1;
+            initCoefficients(lat1);
+        }
+
+        double dX = normalize(lon1 - lon2) * kx;
+        double dY = (lat1 - lat2) * ky;
+
+        return Math.sqrt(dX * dX + dY * dY);
+    }
+
+    @Override
+    final public double calc(double lat, double lon) {
+        double dX = normalize(this.lon - lon) * kx;
+        double dY = (this.lat - lat) * ky;
+
+        return Math.sqrt(dX * dX + dY * dY);
     }
 }
