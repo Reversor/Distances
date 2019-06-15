@@ -33,10 +33,12 @@ public abstract class BaseCheapRuler extends BaseDistanceCalculator {
             initCoefficients(lat1);
         }
 
-        double dX = normalize(lon1 - lon2) * kx;
+        this.lon = lon1;
+        return calc(lat2, lon2);
+        /*double dX = normalize(lon1 - lon2) * kx;
         double dY = (lat1 - lat2) * ky;
 
-        return Math.sqrt(dX * dX + dY * dY);
+        return Math.sqrt(dX * dX + dY * dY);*/
     }
 
     @Override
