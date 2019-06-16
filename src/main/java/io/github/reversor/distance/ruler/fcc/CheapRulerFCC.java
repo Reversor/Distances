@@ -1,18 +1,28 @@
 package io.github.reversor.distance.ruler.fcc;
 
+import io.github.reversor.distance.DistanceCalculator;
+import io.github.reversor.distance.FixedDistanceCalculator;
 import io.github.reversor.distance.ruler.BaseCheapRuler;
 
 final public class CheapRulerFCC extends BaseCheapRuler {
 
-    public CheapRulerFCC(double lat, double lon) {
+    private CheapRulerFCC(double lat, double lon) {
         super(lat, lon);
     }
 
-    public CheapRulerFCC() {
+    private CheapRulerFCC() {
+    }
+
+    public static FixedDistanceCalculator apply(double lat, double lon) {
+        return new CheapRulerFCC(lat, lon);
+    }
+
+    public static DistanceCalculator apply() {
+        return new CheapRulerFCC();
     }
 
     @Override
-    protected void initCoefficients(double lat1) {
+    final protected void initCoefficients(double lat1) {
         this.lat = lat1;
         double cos = Math.cos(lat1 * Math.PI / 180.0);
         double cos2 = 2.D * cos * cos - 1;

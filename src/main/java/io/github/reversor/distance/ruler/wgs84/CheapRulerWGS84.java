@@ -1,17 +1,27 @@
 package io.github.reversor.distance.ruler.wgs84;
 
+import io.github.reversor.distance.DistanceCalculator;
+import io.github.reversor.distance.FixedDistanceCalculator;
 import io.github.reversor.distance.constants.WGS84;
 import io.github.reversor.distance.ruler.BaseCheapRuler;
 
 final public class CheapRulerWGS84 extends BaseCheapRuler {
 
-    public CheapRulerWGS84(double lat, double lon) {
+    private CheapRulerWGS84(double lat, double lon) {
         super(lat, lon);
         initCoefficients(lat);
     }
 
-    public CheapRulerWGS84() {
+    private CheapRulerWGS84() {
         super();
+    }
+
+    public static FixedDistanceCalculator apply(double lat, double lon) {
+        return new CheapRulerWGS84(lat, lon);
+    }
+
+    public static DistanceCalculator apply() {
+        return new CheapRulerWGS84();
     }
 
     @Override
@@ -26,7 +36,7 @@ final public class CheapRulerWGS84 extends BaseCheapRuler {
 
         double mul = (Math.PI / 180) * a;
         double cos = Math.cos(lat1 * Math.PI / 180);
-        double den2 = (1-f) * (1-f) + f * (2-f) * cos * cos;
+        double den2 = (1 - f) * (1 - f) + f * (2 - f) * cos * cos;
         double den = Math.sqrt(den2);
 
         // multipliers for converting longitude and latitude
@@ -40,7 +50,7 @@ final public class CheapRulerWGS84 extends BaseCheapRuler {
         //   M = meridional radius of curvature
         //     = (a*b)^2/((a*cos(phi))^2 + (b*sin(phi))^2)^(3/2)
         kx = mul * cos / den;
-        ky = mul * (1-f) * (1-f) / (den * den2);
+        ky = mul * (1 - f) * (1 - f) / (den * den2);
     }
 
 }

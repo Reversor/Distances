@@ -6,12 +6,12 @@ public abstract class BaseCheapRuler extends BaseDistanceCalculator {
     protected double kx;
     protected double ky;
 
-    public BaseCheapRuler(double lat, double lon) {
+    protected BaseCheapRuler(double lat, double lon) {
         super(lat, lon);
         initCoefficients(lat);
     }
 
-    public BaseCheapRuler() {
+    protected BaseCheapRuler() {
         super();
     }
 
