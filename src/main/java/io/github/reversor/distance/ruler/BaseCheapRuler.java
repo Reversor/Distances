@@ -23,6 +23,7 @@ public abstract class BaseCheapRuler extends BaseDistanceCalculator {
         } else if (v < -180) {
             v += 360;
         }
+
         return v;
     }
 
@@ -35,10 +36,6 @@ public abstract class BaseCheapRuler extends BaseDistanceCalculator {
 
         this.lon = lon1;
         return calc(lat2, lon2);
-        /*double dX = normalize(lon1 - lon2) * kx;
-        double dY = (lat1 - lat2) * ky;
-
-        return Math.sqrt(dX * dX + dY * dY);*/
     }
 
     @Override
