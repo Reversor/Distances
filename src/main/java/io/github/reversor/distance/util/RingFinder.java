@@ -8,13 +8,13 @@ public class RingFinder {
 
     private final FixedDistanceCalculator ruler;
     private final FixedDistanceCalculator vincenty;
-    private final double starDistance;
+    private final double startDistance;
     private final double endDistance;
     private final double width;
     private final double maxRadius;
 
-    public RingFinder(double lat, double lon, double width, double maxRadius, double starDistance, double endDistance) {
-        this.starDistance = starDistance;
+    public RingFinder(double lat, double lon, double width, double maxRadius, double startDistance, double endDistance) {
+        this.startDistance = startDistance;
         this.endDistance = endDistance;
         this.ruler = CheapRulerWGS84.apply(lat, lon);
         this.vincenty = Vincenty.apply(lat, lon);
@@ -37,7 +37,11 @@ public class RingFinder {
             ring = distance / width;
         }
 
-        if (distance > maxRadius || distance < starDistance || distance > endDistance) {
+        if (distance > maxRadius) {
+            return Integer.MIN_VALUE;
+        }
+
+        if ( distance < startDistance || distance > endDistance) {
             return -1;
         }
 
