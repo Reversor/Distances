@@ -6,17 +6,16 @@ import io.github.reversor.distance.vincenty.Vincenty;
 
 public class RingFinder {
 
-    private FixedDistanceCalculator ruler;
-    private FixedDistanceCalculator vincenty;
+    private final FixedDistanceCalculator ruler;
+    private final FixedDistanceCalculator vincenty;
+    private final double starDistance;
+    private final double endDistance;
+    private final double width;
+    private final double maxRadius;
 
-    private double width;
-    private double maxRadius;
-    private int minRing;
-    private int maxRing;
-
-    public RingFinder(double lat, double lon, double width, double maxRadius, int minRing, int maxRing) {
-        this.minRing = minRing;
-        this.maxRing = maxRing;
+    public RingFinder(double lat, double lon, double width, double maxRadius, double starDistance, double endDistance) {
+        this.starDistance = starDistance;
+        this.endDistance = endDistance;
         this.ruler = CheapRulerWGS84.apply(lat, lon);
         this.vincenty = Vincenty.apply(lat, lon);
 
@@ -29,20 +28,19 @@ public class RingFinder {
         double distance;
 
         distance = ruler.calc(lat, lon);
-        if (distance > maxRadius) {
-            return -1;
-        }
 
         ring = distance / width;
 
         double fraction = ring - (int) ring;
         if (fraction > 0.175 || fraction < 0.125) {
-            ring = vincenty.calc(lat, lon) / width;
+            distance = vincenty.calc(lat, lon);
+            ring = distance / width;
         }
 
+        if (distance > maxRadius || distance < starDistance || distance > endDistance) {
+            return -1;
+        }
 
-        int index = (int) ring;
-
-        return index < minRing || index > maxRing ? -1 : index;
+        return (int) ring;
     }
 }
