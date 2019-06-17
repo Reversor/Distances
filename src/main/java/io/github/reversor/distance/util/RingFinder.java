@@ -11,8 +11,12 @@ public class RingFinder {
 
     private double width;
     private double maxRadius;
+    private int minRing;
+    private int maxRing;
 
-    public RingFinder(double lat, double lon, double width, double maxRadius, double accuracy) {
+    public RingFinder(double lat, double lon, double width, double maxRadius, int minRing, int maxRing) {
+        this.minRing = minRing;
+        this.maxRing = maxRing;
         this.ruler = CheapRulerWGS84.apply(lat, lon);
         this.vincenty = Vincenty.apply(lat, lon);
 
@@ -36,6 +40,9 @@ public class RingFinder {
             ring = vincenty.calc(lat, lon) / width;
         }
 
-        return (int) ring;
+
+        int index = (int) ring;
+
+        return index < minRing || index > maxRing ? -1 : index;
     }
 }
