@@ -6,21 +6,15 @@ import io.github.reversor.distance.vincenty.Vincenty;
 
 public class RingFinder {
 
-    private final FixedDistanceCalculator ruler;
-    private final FixedDistanceCalculator vincenty;
-    private final double startDistance;
-    private final double endDistance;
-    private final double width;
-    private final double maxRadius;
+    private FixedDistanceCalculator ruler;
+    private FixedDistanceCalculator vincenty;
+    private double startRadius;
+    private double endRadius;
+    private double width;
+    private double maxRadius;
 
-    public RingFinder(double lat, double lon, double width, double maxRadius, double startDistance, double endDistance) {
-        this.startDistance = startDistance;
-        this.endDistance = endDistance;
-        this.ruler = CheapRulerWGS84.apply(lat, lon);
-        this.vincenty = Vincenty.apply(lat, lon);
+    private RingFinder() {
 
-        this.width = width;
-        this.maxRadius = maxRadius;
     }
 
     public int calc(double lat, double lon) {
@@ -41,10 +35,51 @@ public class RingFinder {
             return Integer.MIN_VALUE;
         }
 
-        if ( distance < startDistance || distance > endDistance) {
+        if (distance < startRadius || distance > endRadius) {
             return -1;
         }
 
         return (int) ring;
+    }
+
+    public static class Builder {
+
+        RingFinder finder;
+
+        public Builder newInstance() {
+            finder = new RingFinder();
+
+            return this;
+        }
+
+        public Builder setStartPoint(double lat, double lon) {
+            finder.ruler = CheapRulerWGS84.apply(lat, lon);
+            finder.vincenty = Vincenty.apply(lat, lon);
+
+            return this;
+        }
+
+        public Builder setMaxRadius(double maxRadius) {
+            finder.maxRadius = maxRadius;
+
+            return this;
+        }
+
+        public Builder setRadiusWidth(double width) {
+            finder.width = width;
+
+            return this;
+        }
+
+        public Builder setRequiredRange(double startRadius, double endRadius) {
+            finder.startRadius = startRadius;
+            finder.endRadius = endRadius;
+
+            return this;
+        }
+
+        public RingFinder build() {
+            return finder;
+        }
     }
 }
