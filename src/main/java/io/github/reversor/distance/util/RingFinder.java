@@ -32,7 +32,7 @@ public class RingFinder {
         ring = distance / width;
 
         double fraction = ring - (int) ring;
-        if (fraction > 0.175 || fraction < 0.125) {
+        if (fraction > 0.875 || fraction < 0.125) {
             distance = vincenty.calc(lat, lon);
             ring = distance / width;
         }
