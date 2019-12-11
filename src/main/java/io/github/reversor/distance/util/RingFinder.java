@@ -53,8 +53,8 @@ public class RingFinder {
         }
 
         public Builder setStartPoint(double lat, double lon) {
-            finder.ruler = CheapRulerWGS84.apply(lat, lon);
-            finder.vincenty = Vincenty.apply(lat, lon);
+            finder.ruler = CheapRulerWGS84.createFixedDistanceCalculator(lat, lon);
+            finder.vincenty = Vincenty.createFixedDistanceCalculator(lat, lon);
 
             return this;
         }
