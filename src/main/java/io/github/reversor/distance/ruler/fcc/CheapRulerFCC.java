@@ -13,11 +13,11 @@ final public class CheapRulerFCC extends BaseCheapRuler {
     private CheapRulerFCC() {
     }
 
-    public static FixedDistanceCalculator apply(double lat, double lon) {
+    public static FixedDistanceCalculator createFixedDistanceCalculator(double lat, double lon) {
         return new CheapRulerFCC(lat, lon);
     }
 
-    public static DistanceCalculator apply() {
+    public static DistanceCalculator createDistanceCalculator() {
         return new CheapRulerFCC();
     }
 

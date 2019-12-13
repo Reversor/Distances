@@ -6,21 +6,23 @@ import io.github.reversor.distance.vincenty.Vincenty;
 
 public class VincentyRuler implements DistanceCalculator {
 
-    private double[] confidenceRange = new double[2];
+    private double upperLimit;
+    private double lowerLimit;
+    private double interval;
 
     private DistanceCalculator ruler;
     private DistanceCalculator vincenty;
-    private double interval;
 
     public VincentyRuler(double interval, double error) {
-        if (error > interval) {
-            throw new IllegalArgumentException();
+        if (error > (interval / 2)) {
+            throw new IllegalArgumentException("The error value must be less than half of the interval value");
         }
+
         this.interval = interval;
-        confidenceRange[0] = error;
-        confidenceRange[1] = interval - error;
-        ruler = CheapRulerWGS84.apply();
-        vincenty = Vincenty.apply();
+        this.upperLimit = error;
+        this.lowerLimit = interval - error;
+        this.ruler = CheapRulerWGS84.createDistanceCalculator();
+        this.vincenty = Vincenty.createDistanceCalculator();
     }
 
 
@@ -29,7 +31,7 @@ public class VincentyRuler implements DistanceCalculator {
         double rulerDistance = ruler.calc(lat1, lon1, lat2, lon2);
 
         double near = rulerDistance % interval;
-        if ((near < confidenceRange[0]) || (near > confidenceRange[1])) {
+        if ((near < upperLimit) || (near > lowerLimit)) {
             return vincenty.calc(lat1, lon1, lat2, lon2);
         }
 

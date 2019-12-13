@@ -18,11 +18,11 @@ final public class CheapRulerWGS84 extends BaseCheapRuler {
         super();
     }
 
-    public static FixedDistanceCalculator apply(double lat, double lon) {
+    public static FixedDistanceCalculator createFixedDistanceCalculator(double lat, double lon) {
         return new CheapRulerWGS84(lat, lon);
     }
 
-    public static DistanceCalculator apply() {
+    public static DistanceCalculator createDistanceCalculator() {
         return new CheapRulerWGS84();
     }
 

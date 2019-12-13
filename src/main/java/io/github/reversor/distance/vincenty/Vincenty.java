@@ -14,11 +14,11 @@ public class Vincenty extends BaseDistanceCalculator {
     private Vincenty() {
     }
 
-    public static FixedDistanceCalculator apply(double lat, double lon) {
+    public static FixedDistanceCalculator createFixedDistanceCalculator(double lat, double lon) {
         return new Vincenty(lat, lon);
     }
 
-    public static DistanceCalculator apply() {
+    public static DistanceCalculator createDistanceCalculator() {
         return new Vincenty();
     }
 
